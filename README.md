@@ -1,6 +1,6 @@
 # WearOn
 
-WearOn is a privacy-conscious virtual fitting studio: choose a garment, open a camera preview, and start a short interactive fitting session. I built it as a product-quality prototype around a replaceable inference boundary, rather than coupling the application to one model runtime.
+WearOn is a privacy-conscious virtual fitting studio: choose a garment, open a camera preview, and start a short interactive fitting session. I built it as a product-quality prototype around a replaceable inference boundary, rather than coupling the application to one model runtime. I also trained a proprietary virtual try-on model for the project; its weights and training code are not open source.
 
 ![WearOn full-outfit fitting result](docs/screenshots/full-outfit-result.png)
 
@@ -12,6 +12,7 @@ WearOn is a privacy-conscious virtual fitting studio: choose a garment, open a c
 - Signed HttpOnly sessions, strict origin checks, bounded short-lived access tokens, and rate limits
 - Persistent SQLite usage controls for a cost-sensitive interactive service
 - A replaceable fitting-backend boundary designed for a future self-hosted model
+- Proprietary virtual try-on model development, with weights and training code kept private
 - Automated API, policy, lifecycle, catalog, and browser regression checks
 
 ## Architecture
@@ -30,7 +31,7 @@ Next.js application
 Replaceable fitting backend
 ```
 
-The public repository includes the application, security controls, test suite, and the backend contract. The production inference adapter and credentials are intentionally not published. This keeps the integration replaceable and prevents secrets or deploy-specific code from entering the public history. The public build expects a compatible adapter at `globalThis.WearOnFittingBackend`.
+The public repository includes the application, security controls, test suite, and the backend contract. Model weights, training code, the production inference adapter, and credentials are intentionally not published. This keeps the integration replaceable and prevents proprietary artifacts, secrets, or deploy-specific code from entering the public history. The public build expects a compatible adapter at `globalThis.WearOnFittingBackend`.
 
 ## Run locally
 
