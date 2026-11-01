@@ -42,8 +42,12 @@ test('every collection piece has an original usable image and category-specific 
   for (const item of garments) {
     assert.ok(CATEGORIES.includes(item.category));
     const image = await readFile(new URL(`../public${item.image}`, import.meta.url));
-    assert.deepEqual([...image.subarray(0, 8)], [137,80,78,71,13,10,26,10]);
-    assert.ok(image.length < 10 * 1024 * 1024);
+    const head = [...image.subarray(0, 12)];
+    const tag = String.fromCharCode(...head.slice(0, 4));
+    const isPng = head[0] === 137 && head[1] === 80 && head[2] === 78 && head[3] === 71;
+    const isWebp = tag === 'RIFF' && String.fromCharCode(...head.slice(8, 12)) === 'WEBP';
+    assert.ok(isPng || isWebp, `${item.id} is neither PNG nor WebP (got ${tag})`);
+    assert.ok(image.length < 1024 * 1024, `${item.id} is ${Math.round(image.length / 1024)} KB`);
     const prompt = garmentPrompt(item.category, item.description);
     assert.ok(prompt.includes(item.description));
     assert.ok(prompt.includes('Replace all logos, lettering and graphics from the original clothing'));

@@ -97,7 +97,8 @@ export default function FittingRoom() {
       if (item) {
         const response = await fetch(item.image, { signal: AbortSignal.timeout(10000) });
         if (!response.ok) throw new Error('This piece could not be loaded. Please try another.');
-        file = new File([await response.blob()], `${item.id}.png`, { type: 'image/png' });
+        const blob = await response.blob();
+        file = new File([blob], `${item.id}.webp`, { type: blob.type || 'image/webp' });
       }
       const invalid = imageError(file); if (invalid) throw new Error(invalid);
       const bitmap = await createImageBitmap(file);
@@ -211,7 +212,7 @@ export default function FittingRoom() {
       <div className="entrance-copy"><p className="eyebrow">THE WEARON FITTING EXPERIENCE</p><h1>Good style.<br/><span>Your way.</span></h1><p className="lead">Meet your next look before you wear it.<br/>A collection to explore. A mirror that moves with you.</p>
         <form onSubmit={unlock} className="access-form"><label htmlFor="access-code">Your invitation code</label><div className="access-row"><input id="access-code" type="password" autoComplete="off" maxLength={128} placeholder="Enter your private access code" value={code} onChange={event => setCode(event.target.value)} disabled={access === 'checking' || unlocking} required/><button className="primary" disabled={!code.trim() || unlocking || access === 'checking'}>{unlocking ? 'Opening…' : access === 'checking' ? 'Checking…' : 'Enter studio'}<ArrowTopRightIcon/></button></div><p className="feedback" role="status">{message || 'An invitation-only preview. Best experienced on a computer.'}</p></form>
         <div className="entrance-meta"><span>{garments.length} considered looks</span><span>One live fitting room</span></div>
-      </div><div className="entrance-art"><span className="art-index">THE EVERYDAY EDIT / 01</span><Image width={1122} height={1402} sizes="(max-width: 800px) 92vw, 45vw" src="/garments/clay-overshirt.png" alt="Terracotta cotton overshirt from the WearOn collection" fetchPriority="high"/><div className="art-caption"><div><span className="eyebrow">IN THE COLLECTION</span><h2>Made for a different day.</h2></div><ArrowTopRightIcon/></div></div>
+      </div><div className="entrance-art"><span className="art-index">THE EVERYDAY EDIT / 01</span><Image width={1122} height={1402} sizes="(max-width: 800px) 92vw, 45vw" src="/garments/clay-overshirt.webp" alt="Terracotta cotton overshirt from the WearOn collection" fetchPriority="high"/><div className="art-caption"><div><span className="eyebrow">IN THE COLLECTION</span><h2>Made for a different day.</h2></div><ArrowTopRightIcon/></div></div>
     </main> : <main>
       <section className="studio-heading"><div><p className="eyebrow">YOUR PERSONAL FITTING STUDIO</p><h1>Find your <span>next look.</span></h1></div><p>Pick a piece. Step into frame.<br/>See what feels like you.</p></section>
       <div className="desktop-notice">This preview is designed for a computer with a webcam. For the best fitting experience, open it on desktop.</div>
